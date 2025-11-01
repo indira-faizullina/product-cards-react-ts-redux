@@ -1,0 +1,17 @@
+.cardContainer {
+    margin: 0 30px 30px;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #f9f9f9;
+    color: black;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardContainer:hover {
+    border: 1px solid #79b585;
+    background-color: #8deba0;
+}
