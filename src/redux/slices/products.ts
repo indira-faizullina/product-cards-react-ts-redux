@@ -1,25 +1,14 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import type { Product, ProductsState, RootState } from '../../types/types'
 
-interface Product {
-    id: number
-    title: string
-    description: string
-    price: number
-    image: string
-    category: string
-    rating: {
-        rate: number
-        count: number
+
+export const fetchProducts = createAsyncThunk<Product[], void, { state: RootState }>('products/fetchProducts', async (_, { getState }) => {
+    const state = getState()
+    
+    if (state.products.items.length > 0) {
+        return state.products.items
     }
-    isLiked?: boolean
-}
-
-interface ProductsState {
-    items: Product[]
-    status: 'loading' | 'loaded' | 'error'
-}
-
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
+    
     const response = await fetch('https://fakestoreapi.com/products/')
     const data = await response.json()
     return data
@@ -35,13 +24,27 @@ const productSlice = createSlice({
     initialState,
     reducers: {
         deleteProduct: (state, action) => {
-            state.items = state.items.filter(item => item.id !== action.payload);
+            state.items = state.items.filter(item => item.id !== action.payload)
         },
         toggleLike: (state, action) => {
-            const product = state.items.find(item => item.id === action.payload);
+            const product = state.items.find(item => item.id === action.payload)
             if (product) {
-                product.isLiked = !product.isLiked;
+                product.isLiked = !product.isLiked
+                const likedProducts = state.items.filter(item => item.isLiked).map(item => item.id)
+                localStorage.setItem('likedProducts', JSON.stringify(likedProducts))
             }
+        },
+        addProduct: (state, action) => {
+            const newProduct: Product = {
+                id: Date.now(),
+                ...action.payload,
+                rating: {
+                    rate: 0,
+                    count: 0
+                },
+                isLiked: false,
+            }
+            state.items.unshift(newProduct)
         },
     },
     extraReducers: (builder) => {
@@ -51,9 +54,10 @@ const productSlice = createSlice({
             })
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.status = 'loaded'
+                const savedLikes = JSON.parse(localStorage.getItem('likedProducts') || '[]')
                 state.items = action.payload.map((product: any) => ({
                     ...product,
-                    isLiked: false
+                    isLiked: savedLikes.includes(product.id)
                 }))
             })
             .addCase(fetchProducts.rejected, (state) => {
@@ -62,5 +66,5 @@ const productSlice = createSlice({
     }
 })
 
-export const productsReduser = productSlice.reducer
-export const { deleteProduct, toggleLike } = productSlice.actions;
+export const productsReduсer = productSlice.reducer
+export const { deleteProduct, toggleLike, addProduct } = productSlice.actions

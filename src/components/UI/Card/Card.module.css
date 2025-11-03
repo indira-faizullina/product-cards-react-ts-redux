@@ -9,9 +9,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .cardContainer:hover {
     border: 1px solid #79b585;
-    background-color: #8deba0;
+    background-color: #a3ecb2;
 }

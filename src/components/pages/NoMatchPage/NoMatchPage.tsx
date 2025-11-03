@@ -1,5 +1,8 @@
 export default function NoMatchPage() {
     return(
-        <p>404</p>
+        <>
+            <h1>404</h1>
+            <p>Страница не найдена</p>
+        </>
     )
 }

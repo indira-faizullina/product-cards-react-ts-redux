@@ -1,18 +1,27 @@
-import Card from '../../UI/Card/Card'
-import IconButton from '../../UI/IconButton/IconButton'
-import styles from './ProductsPage.module.css'
-import { useEffect } from "react"
-import { useDispatch, useSelector } from 'react-redux'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProducts, deleteProduct, toggleLike } from '../../../redux/slices/products'
+import Card from '../../UI/Card/Card'
+import Button from '../../UI/Button/Button'
+import IconButton from '../../UI/IconButton/IconButton'
 import deleteIcon from '../../../assets/delete.png'
 import likedIcon from '../../../assets/like.png'
 import noLikeIcon from '../../../assets/no-like.png'
-import { fetchProducts, deleteProduct, toggleLike } from '../../../redux/slices/products'
+import styles from './ProductsPage.module.css'
+import type { RootState } from '../../../types/types'
 
 export default function ProductsPage() {
 
     const dispatch = useDispatch()
-    const { items: products, status } = useSelector((state) => state.products)
+    const { items: products, status } = useSelector((state: RootState) => state.products)
+
+    const [filter, setFilter] = useState('all')
+
+    const filteredProducts = filter === 'liked' 
+    ? products.filter(product => product.isLiked)
+    : products
+
 
     useEffect(() => {
         dispatch(fetchProducts())
@@ -25,6 +34,7 @@ export default function ProductsPage() {
     const handleToggleLike = (id: number) => {
         dispatch(toggleLike(id))
     }
+
 
     if (status === 'loading') {
         return (
@@ -44,11 +54,16 @@ export default function ProductsPage() {
         )
     }
 
-        return(
+    return(
         <div className={styles.container}>
             <h1>Products Page</h1>
+            <div className={styles.filter}>
+                <Button onClick={() => setFilter('all')}>Показать все</Button>
+                <Button onClick={() => setFilter('liked')}>Избранное</Button>
+                <Link to={'/create-product'}><Button>Добавить товар</Button></Link>
+            </div>
             <div className={styles.productsGrid}>
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                     <Card key={product.id}>
                         <Link to={`/products/${product.id}`} className={styles.productLink}>
                             <div className={styles.imageContainer}>
