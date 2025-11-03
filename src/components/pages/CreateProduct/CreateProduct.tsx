@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { addProduct } from '../../../redux/slices/products'
 import Button from '../../UI/Button/Button'
 import styles from './CreateProduct.module.css'
+import type { FormErrors } from '../../../types/types'
 
 export default function CreateProduct() {
 
@@ -18,7 +19,7 @@ export default function CreateProduct() {
         category: ''
     })
 
-    const [errors, setErrors] = useState({})
+    const [errors, setErrors] = useState<FormErrors>({})
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -27,13 +28,13 @@ export default function CreateProduct() {
             [name]: name === 'price' ? parseFloat(value) || 0 : value
         }))
         
-        if (errors) {
+        if (errors[name as keyof FormErrors]) {
             setErrors(prev => ({ ...prev, [name]: '' }))
         }
     };
 
     const validateForm = (): boolean => {
-        const newErrors = {}
+        const newErrors: FormErrors = {}
 
         if (!formData.title.trim()) newErrors.title = 'Введите название'
         if (!formData.description.trim()) newErrors.description = 'Ведите описание'
@@ -143,10 +144,10 @@ export default function CreateProduct() {
                 </div>
 
                 <div className={styles.actions}>
-                    <Button type="button"onClick={handleCancel}>
+                    <Button onClick={handleCancel}>
                         Отмена
                     </Button>
-                    <Button type="submit">
+                    <Button onClick={handleSubmit}>
                         Добавить продукт
                     </Button>
                 </div>

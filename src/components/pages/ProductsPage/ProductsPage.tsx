@@ -24,7 +24,7 @@ export default function ProductsPage() {
 
 
     useEffect(() => {
-        dispatch(fetchProducts())
+        dispatch(fetchProducts() as any)
     }, [])
 
     const handleDelete = (id: number) => {
@@ -60,7 +60,7 @@ export default function ProductsPage() {
             <div className={styles.filter}>
                 <Button onClick={() => setFilter('all')}>Показать все</Button>
                 <Button onClick={() => setFilter('liked')}>Избранное</Button>
-                <Link to={'/create-product'}><Button>Добавить товар</Button></Link>
+                <Link to={'/create-product'}><Button onClick={()=>{}}>Добавить товар</Button></Link>
             </div>
             <div className={styles.productsGrid}>
                 {filteredProducts.map((product) => (

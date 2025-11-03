@@ -20,3 +20,26 @@ export interface ProductsState {
 export interface RootState {
   products: ProductsState
 }
+
+export interface FormErrors {
+  title?: string
+  description?: string
+  price?: string
+  image?: string
+  category?: string
+}
+
+export interface ButtonProps {
+  children: React.ReactNode
+  onClick: () => void
+}
+
+export interface CardProps {
+  children: React.ReactNode
+}
+
+export interface IconButtonProps {
+  image: string
+  alt: string
+  onClick: () => void
+}

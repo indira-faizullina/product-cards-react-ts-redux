@@ -15,16 +15,17 @@ const dispatch = useDispatch()
 
 const { items: products } = useSelector((state: RootState) => state.products)
 
-const handleToggleLike = (id: number) => {
-    dispatch(toggleLike(id))
-}
-
 const { id } = useParams()
 const navigate = useNavigate()
 
 const goBack = () => navigate(-1)
 
-const productItem = products.find(product => product.id === parseInt(id))
+const handleToggleLike = (id: number) => {
+    dispatch(toggleLike(id))
+}
+
+const productId = id ? parseInt(id) : 0
+const productItem = products.find(product => product.id === productId)
 
 if (!productItem) {
     return (
