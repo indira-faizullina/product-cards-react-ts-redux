@@ -31,7 +31,7 @@ export interface FormErrors {
 
 export interface ButtonProps {
   children: React.ReactNode
-  onClick: () => void
+  onClick?: (e: React.MouseEvent) => void
 }
 
 export interface CardProps {
